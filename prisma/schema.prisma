@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ParkingSpaceStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  OUT_OF_SERVICE
+  MAINTENANCE
+}
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+}
+
+enum ParkingSessionStatus {
+  ACTIVE
+  COMPLETED
+}
+
+model Sector {
+  id            String         @id @default(uuid())
+  name          String
+  description   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  parkingSpaces ParkingSpace[]
+
+  @@map("sectors")
+}
+
+model ParkingSpace {
+  id              String           @id @default(uuid())
+  number          Int
+  sectorId        String
+  status          ParkingSpaceStatus @default(AVAILABLE)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  sector          Sector           @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  parkingSessions ParkingSession[]
+
+  @@map("parking_spaces")
+}
+
+model VehicleType {
+  id            String    @id @default(uuid())
+  name          String
+  ratePerMinute Decimal   @db.Decimal(10, 2)
+  description   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  vehicles      Vehicle[]
+
+  @@map("vehicle_types")
+}
+
+model Vehicle {
+  id              String           @id @default(uuid())
+  licensePlate    String           @unique
+  brand           String
+  model           String
+  color           String
+  vehicleTypeId   String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  vehicleType     VehicleType      @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
+  parkingSessions ParkingSession[]
+
+  @@map("vehicles")
+}
+
+model User {
+  id                       String           @id @default(uuid())
+  firstName                String
+  lastName                 String
+  email                    String           @unique
+  password                 String
+  role                     UserRole         @default(OPERATOR)
+  isActive                 Boolean          @default(true)
+  createdAt                DateTime         @default(now())
+  updatedAt                DateTime         @updatedAt
+  checkInSessions          ParkingSession[] @relation("CheckInUser")
+  checkOutSessions         ParkingSession[] @relation("CheckOutUser")
+
+  @@map("users")
+}
+
+model ParkingSession {
+  id              String               @id @default(uuid())
+  vehicleId       String
+  parkingSpaceId  String
+  checkInUserId   String
+  checkOutUserId  String?
+  checkInTime     DateTime             @default(now())
+  checkOutTime    DateTime?
+  durationMinutes Int?
+  totalAmount     Decimal?             @db.Decimal(10, 2)
+  status          ParkingSessionStatus @default(ACTIVE)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  vehicle         Vehicle              @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  parkingSpace    ParkingSpace         @relation(fields: [parkingSpaceId], references: [id], onDelete: Restrict)
+  checkInUser     User                 @relation("CheckInUser", fields: [checkInUserId], references: [id], onDelete: Restrict)
+  checkOutUser    User?                @relation("CheckOutUser", fields: [checkOutUserId], references: [id], onDelete: Restrict)
+
+  @@map("parking_sessions")
+}
