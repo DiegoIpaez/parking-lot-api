@@ -26,68 +26,75 @@ enum ParkingSessionStatus {
 }
 
 model Sector {
-  id            String         @id @default(uuid())
-  name          String
-  description   String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   parkingSpaces ParkingSpace[]
 
   @@map("sectors")
 }
 
 model ParkingSpace {
-  id              String           @id @default(uuid())
-  number          Int
-  sectorId        String
-  status          ParkingSpaceStatus @default(AVAILABLE)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  sector          Sector           @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  id        String             @id @default(uuid())
+  number    Int
+  sectorId  String
+  status    ParkingSpaceStatus @default(AVAILABLE)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
   parkingSessions ParkingSession[]
+
+  sector Sector @relation(fields: [sectorId], references: [id], onDelete: Cascade)
 
   @@map("parking_spaces")
 }
 
 model VehicleType {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
-  ratePerMinute Decimal   @db.Decimal(10, 2)
+  ratePerMinute Decimal  @db.Decimal(10, 2)
   description   String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  vehicles      Vehicle[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  vehicles Vehicle[]
 
   @@map("vehicle_types")
 }
 
 model Vehicle {
-  id              String           @id @default(uuid())
-  licensePlate    String           @unique
-  brand           String
-  model           String
-  color           String
-  vehicleTypeId   String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  vehicleType     VehicleType      @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
+  id            String   @id @default(uuid())
+  licensePlate  String   @unique
+  brand         String
+  model         String
+  color         String
+  vehicleTypeId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
   parkingSessions ParkingSession[]
+
+  vehicleType VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
 
   @@map("vehicles")
 }
 
 model User {
-  id                       String           @id @default(uuid())
-  firstName                String
-  lastName                 String
-  email                    String           @unique
-  password                 String
-  role                     UserRole         @default(OPERATOR)
-  isActive                 Boolean          @default(true)
-  createdAt                DateTime         @default(now())
-  updatedAt                DateTime         @updatedAt
-  checkInSessions          ParkingSession[] @relation("CheckInUser")
-  checkOutSessions         ParkingSession[] @relation("CheckOutUser")
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  role      UserRole @default(OPERATOR)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  checkInSessions  ParkingSession[] @relation("check_in_user")
+  checkOutSessions ParkingSession[] @relation("check_out_user")
 
   @@map("users")
 }
@@ -105,10 +112,11 @@ model ParkingSession {
   status          ParkingSessionStatus @default(ACTIVE)
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
-  vehicle         Vehicle              @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
-  parkingSpace    ParkingSpace         @relation(fields: [parkingSpaceId], references: [id], onDelete: Restrict)
-  checkInUser     User                 @relation("CheckInUser", fields: [checkInUserId], references: [id], onDelete: Restrict)
-  checkOutUser    User?                @relation("CheckOutUser", fields: [checkOutUserId], references: [id], onDelete: Restrict)
+
+  vehicle      Vehicle      @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  parkingSpace ParkingSpace @relation(fields: [parkingSpaceId], references: [id], onDelete: Restrict)
+  checkInUser  User         @relation("check_in_user", fields: [checkInUserId], references: [id], onDelete: Restrict)
+  checkOutUser User?        @relation("check_out_user", fields: [checkOutUserId], references: [id], onDelete: Restrict)
 
   @@map("parking_sessions")
 }

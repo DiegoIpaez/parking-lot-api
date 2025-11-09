@@ -404,3 +404,7 @@ dist
 
 # Prisma
 /prisma/migrations/migration_lock.toml
+
+# IDEs
+.idea/
+.vscode/
