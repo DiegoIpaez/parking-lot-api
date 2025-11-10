@@ -1,7 +1,7 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsInt } from 'class-validator';
 
 export class CheckoutParkingSessionDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  checkOutUserId: string;
+  checkOutUserId: number;
 }

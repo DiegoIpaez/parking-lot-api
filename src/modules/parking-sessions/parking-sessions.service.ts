@@ -133,7 +133,7 @@ export class ParkingSessionsService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const session = await this.prisma.parkingSession.findUnique({
       where: { id },
       include: {
@@ -173,7 +173,7 @@ export class ParkingSessionsService {
     return session;
   }
 
-  async checkout(id: string, checkoutDto: CheckoutParkingSessionDto) {
+  async checkout(id: number, checkoutDto: CheckoutParkingSessionDto) {
     const session = await this.findOne(id);
 
     if (session.status === ParkingSessionStatus.COMPLETED) {
@@ -236,7 +236,7 @@ export class ParkingSessionsService {
     return updatedSession;
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id);
 
     return this.prisma.parkingSession.delete({

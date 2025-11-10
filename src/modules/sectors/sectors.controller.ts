@@ -28,18 +28,18 @@ export class SectorsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.sectorsService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateSectorDto: UpdateSectorDto) {
+  update(@Param('id') id: number, @Body() updateSectorDto: UpdateSectorDto) {
     return this.sectorsService.update(id, updateSectorDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.sectorsService.remove(id);
   }
 }

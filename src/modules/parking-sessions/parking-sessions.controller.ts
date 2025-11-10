@@ -38,13 +38,13 @@ export class ParkingSessionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.parkingSessionsService.findOne(id);
   }
 
   @Put(':id/checkout')
   checkout(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() checkoutDto: CheckoutParkingSessionDto
   ) {
     return this.parkingSessionsService.checkout(id, checkoutDto);
@@ -52,7 +52,7 @@ export class ParkingSessionsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.parkingSessionsService.remove(id);
   }
 }

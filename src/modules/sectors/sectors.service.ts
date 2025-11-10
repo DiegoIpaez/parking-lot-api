@@ -24,7 +24,7 @@ export class SectorsService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const sector = await this.prisma.sector.findUnique({
       where: { id },
       include: {
@@ -39,7 +39,7 @@ export class SectorsService {
     return sector;
   }
 
-  async update(id: string, updateSectorDto: UpdateSectorDto) {
+  async update(id: number, updateSectorDto: UpdateSectorDto) {
     await this.findOne(id);
 
     return this.prisma.sector.update({
@@ -48,7 +48,7 @@ export class SectorsService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id);
 
     return this.prisma.sector.delete({

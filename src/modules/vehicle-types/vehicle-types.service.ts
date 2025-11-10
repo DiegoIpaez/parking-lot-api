@@ -21,7 +21,7 @@ export class VehicleTypesService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const vehicleType = await this.prisma.vehicleType.findUnique({
       where: { id },
       include: {
@@ -36,7 +36,7 @@ export class VehicleTypesService {
     return vehicleType;
   }
 
-  async update(id: string, updateVehicleTypeDto: UpdateVehicleTypeDto) {
+  async update(id: number, updateVehicleTypeDto: UpdateVehicleTypeDto) {
     await this.findOne(id);
 
     return this.prisma.vehicleType.update({
@@ -45,7 +45,7 @@ export class VehicleTypesService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id);
 
     return this.prisma.vehicleType.delete({

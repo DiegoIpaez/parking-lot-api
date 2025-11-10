@@ -61,7 +61,7 @@ export class UsersService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: {
@@ -89,7 +89,7 @@ export class UsersService {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
 
     const dataToUpdate: any = { ...updateUserDto };
@@ -114,7 +114,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id);
 
     return this.prisma.user.update({

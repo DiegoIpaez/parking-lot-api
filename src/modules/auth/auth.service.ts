@@ -49,7 +49,7 @@ export class AuthService {
     };
   }
 
-  async validateUser(userId: string) {
+  async validateUser(userId: number) {
     return this.usersService.findOne(userId);
   }
 }

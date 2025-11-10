@@ -17,7 +17,7 @@ export class ParkingSpacesService {
     });
   }
 
-  async findAll(sectorId?: string, status?: ParkingSpaceStatus) {
+  async findAll(sectorId?: number, status?: ParkingSpaceStatus) {
     return this.prisma.parkingSpace.findMany({
       where: {
         ...(sectorId && { sectorId }),
@@ -30,7 +30,7 @@ export class ParkingSpacesService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const parkingSpace = await this.prisma.parkingSpace.findUnique({
       where: { id },
       include: {
@@ -45,7 +45,7 @@ export class ParkingSpacesService {
     return parkingSpace;
   }
 
-  async update(id: string, updateParkingSpaceDto: UpdateParkingSpaceDto) {
+  async update(id: number, updateParkingSpaceDto: UpdateParkingSpaceDto) {
     await this.findOne(id);
 
     return this.prisma.parkingSpace.update({
@@ -57,7 +57,7 @@ export class ParkingSpacesService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id);
 
     return this.prisma.parkingSpace.delete({

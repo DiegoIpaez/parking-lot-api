@@ -33,18 +33,18 @@ export class VehiclesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.vehiclesService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
+  update(@Param('id') id: number, @Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehiclesService.update(id, updateVehicleDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.vehiclesService.remove(id);
   }
 }

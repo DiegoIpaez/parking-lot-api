@@ -28,13 +28,13 @@ export class VehicleTypesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.vehicleTypesService.findOne(id);
   }
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateVehicleTypeDto: UpdateVehicleTypeDto
   ) {
     return this.vehicleTypesService.update(id, updateVehicleTypeDto);
@@ -42,7 +42,7 @@ export class VehicleTypesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.vehicleTypesService.remove(id);
   }
 }

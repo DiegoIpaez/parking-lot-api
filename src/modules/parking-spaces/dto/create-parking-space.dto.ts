@@ -1,5 +1,4 @@
 import {
-  IsString,
   IsNotEmpty,
   IsInt,
   Min,
@@ -15,9 +14,9 @@ export class CreateParkingSpaceDto {
   @Max(10)
   number: number;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  sectorId: string;
+  sectorId: number;
 
   @IsEnum(ParkingSpaceStatus)
   @IsOptional()

@@ -26,20 +26,20 @@ export class ParkingSpacesController {
 
   @Get()
   findAll(
-    @Query('sectorId') sectorId?: string,
+    @Query('sectorId') sectorId?: number,
     @Query('status') status?: ParkingSpaceStatus
   ) {
     return this.parkingSpacesService.findAll(sectorId, status);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.parkingSpacesService.findOne(id);
   }
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateParkingSpaceDto: UpdateParkingSpaceDto
   ) {
     return this.parkingSpacesService.update(id, updateParkingSpaceDto);
@@ -47,7 +47,7 @@ export class ParkingSpacesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.parkingSpacesService.remove(id);
   }
 }
