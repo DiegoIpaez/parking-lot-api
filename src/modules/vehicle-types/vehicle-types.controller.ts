@@ -13,7 +13,7 @@ import { VehicleTypesService } from './vehicle-types.service';
 import { CreateVehicleTypeDto } from './dto/create-vehicle-type.dto';
 import { UpdateVehicleTypeDto } from './dto/update-vehicle-type.dto';
 
-@Controller('api/vehicle-types')
+@Controller('vehicle-types')
 export class VehicleTypesController {
   constructor(private readonly vehicleTypesService: VehicleTypesService) {}
 

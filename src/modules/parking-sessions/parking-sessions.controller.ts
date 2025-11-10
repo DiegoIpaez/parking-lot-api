@@ -15,7 +15,7 @@ import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
 import { ParkingSessionStatus } from '@prisma/client';
 
-@Controller('api/parking-sessions')
+@Controller('parking-sessions')
 export class ParkingSessionsController {
   constructor(
     private readonly parkingSessionsService: ParkingSessionsService

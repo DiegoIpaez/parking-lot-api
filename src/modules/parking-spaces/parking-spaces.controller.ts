@@ -15,7 +15,7 @@ import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
 import { ParkingSpaceStatus } from '@prisma/client';
 
-@Controller('api/parking-spaces')
+@Controller('parking-spaces')
 export class ParkingSpacesController {
   constructor(private readonly parkingSpacesService: ParkingSpacesService) {}
 

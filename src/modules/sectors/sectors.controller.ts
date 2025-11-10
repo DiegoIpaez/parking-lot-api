@@ -13,7 +13,7 @@ import { SectorsService } from './sectors.service';
 import { CreateSectorDto } from './dto/create-sector.dto';
 import { UpdateSectorDto } from './dto/update-sector.dto';
 
-@Controller('api/sectors')
+@Controller('sectors')
 export class SectorsController {
   constructor(private readonly sectorsService: SectorsService) {}
 
