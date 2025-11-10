@@ -26,7 +26,7 @@ enum ParkingSessionStatus {
 }
 
 model Sector {
-  id          String   @id @default(uuid())
+  id          Int      @id @default(autoincrement())
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -38,9 +38,9 @@ model Sector {
 }
 
 model ParkingSpace {
-  id        String             @id @default(uuid())
+  id        Int                @id @default(autoincrement())
   number    Int
-  sectorId  String
+  sectorId  Int
   status    ParkingSpaceStatus @default(AVAILABLE)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
@@ -53,7 +53,7 @@ model ParkingSpace {
 }
 
 model VehicleType {
-  id            String   @id @default(uuid())
+  id            Int      @id @default(autoincrement())
   name          String
   ratePerMinute Decimal  @db.Decimal(10, 2)
   description   String?
@@ -66,12 +66,12 @@ model VehicleType {
 }
 
 model Vehicle {
-  id            String   @id @default(uuid())
+  id            Int      @id @default(autoincrement())
   licensePlate  String   @unique
   brand         String
   model         String
   color         String
-  vehicleTypeId String
+  vehicleTypeId Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -83,7 +83,7 @@ model Vehicle {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   firstName String
   lastName  String
   email     String   @unique
@@ -100,11 +100,11 @@ model User {
 }
 
 model ParkingSession {
-  id              String               @id @default(uuid())
-  vehicleId       String
-  parkingSpaceId  String
-  checkInUserId   String
-  checkOutUserId  String?
+  id              Int                  @id @default(autoincrement())
+  vehicleId       Int
+  parkingSpaceId  Int
+  checkInUserId   Int
+  checkOutUserId  Int?
   checkInTime     DateTime             @default(now())
   checkOutTime    DateTime?
   durationMinutes Int?
