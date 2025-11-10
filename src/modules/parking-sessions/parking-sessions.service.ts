@@ -3,7 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../services/prisma/prisma.service';
 import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
 import { ParkingSpaceStatus, ParkingSessionStatus } from '@prisma/client';
