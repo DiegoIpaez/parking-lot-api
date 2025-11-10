@@ -8,11 +8,14 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { VehicleTypesService } from './vehicle-types.service';
 import { CreateVehicleTypeDto } from './dto/create-vehicle-type.dto';
 import { UpdateVehicleTypeDto } from './dto/update-vehicle-type.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('vehicle-types')
 export class VehicleTypesController {
   constructor(private readonly vehicleTypesService: VehicleTypesService) {}
