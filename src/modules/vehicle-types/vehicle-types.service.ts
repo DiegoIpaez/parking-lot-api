@@ -1,7 +1,10 @@
+import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma/prisma.service';
+import { paginationFormatter } from '@/utils/pagination/pagination.util';
 import { CreateVehicleTypeDto } from './dto/create-vehicle-type.dto';
 import { UpdateVehicleTypeDto } from './dto/update-vehicle-type.dto';
+import { FindVehicleTypesDto } from './dto/find-vehicle-types.dto';
 
 @Injectable()
 export class VehicleTypesService {
@@ -13,11 +16,33 @@ export class VehicleTypesService {
     });
   }
 
-  async findAll() {
-    return this.prisma.vehicleType.findMany({
+  async findAll(query: FindVehicleTypesDto) {
+    const { page, limit, showAll, name } = query;
+    const whereClause: Prisma.VehicleTypeWhereInput = {};
+    if (name) whereClause.name = { contains: name, mode: 'insensitive' };
+
+    const queryClause: Prisma.VehicleTypeFindManyArgs = {
+      where: whereClause,
       orderBy: {
         name: 'asc',
       },
+    };
+    if (!showAll) {
+      queryClause.skip = (page - 1) * limit;
+      queryClause.take = limit;
+    }
+
+    const data = await this.prisma.vehicleType.findMany(queryClause);
+    const totalRecords = await this.prisma.vehicleType.count({
+      where: whereClause,
+    });
+
+    return paginationFormatter({
+      page,
+      limit,
+      data,
+      totalRecords,
+      showAll,
     });
   }
 
