@@ -39,7 +39,7 @@ export class UsersService {
   }
 
   async findAll(query: FindUsersDto) {
-    const { page, limit } = query;
+    const { page, limit, showAll } = query;
     const whereClause: Prisma.UserWhereInput = {};
 
     if (query.role) whereClause.role = query.role;
@@ -47,22 +47,27 @@ export class UsersService {
       whereClause.email = { contains: query.email, mode: 'insensitive' };
     }
 
-    const users = await this.prisma.user.findMany({
+    const queryClause: Prisma.UserFindManyArgs = {
       where: whereClause,
-      skip: (page - 1) * limit,
-      take: limit,
       omit: { password: true },
       orderBy: {
         createdAt: 'desc',
       },
-    });
-    const totalUsers = await this.prisma.user.count({ where: whereClause });
+    };
+    if (!showAll) {
+      queryClause.skip = (page - 1) * limit;
+      queryClause.take = limit;
+    }
+
+    const data = await this.prisma.user.findMany(queryClause);
+    const totalRecords = await this.prisma.user.count({ where: whereClause });
 
     return paginationFormatter<Omit<User, 'password'>>({
       page,
       limit,
-      data: users,
-      totalRecords: totalUsers,
+      data,
+      totalRecords,
+      showAll,
     });
   }
 
