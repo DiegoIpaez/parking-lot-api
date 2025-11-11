@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import { Prisma, User } from '@prisma/client';
 import {
   Injectable,
   NotFoundException,
@@ -7,6 +8,8 @@ import {
 import { PrismaService } from '@/services/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUsersDto } from './dto/find-users.dto';
+import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class UsersService {
@@ -35,12 +38,31 @@ export class UsersService {
     });
   }
 
-  async findAll() {
-    return this.prisma.user.findMany({
+  async findAll(query: FindUsersDto) {
+    const { page, limit } = query;
+    const whereClause: Prisma.UserWhereInput = {};
+
+    if (query.role) whereClause.role = query.role;
+    if (query.email) {
+      whereClause.email = { contains: query.email, mode: 'insensitive' };
+    }
+
+    const users = await this.prisma.user.findMany({
+      where: whereClause,
+      skip: (page - 1) * limit,
+      take: limit,
       omit: { password: true },
       orderBy: {
         createdAt: 'desc',
       },
+    });
+    const totalUsers = await this.prisma.user.count({ where: whereClause });
+
+    return paginationFormatter<Omit<User, 'password'>>({
+      page,
+      limit,
+      data: users,
+      totalRecords: totalUsers,
     });
   }
 
