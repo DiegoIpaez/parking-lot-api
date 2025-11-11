@@ -1,3 +1,4 @@
+import { ParkingSessionStatus } from '@prisma/client';
 import {
   Controller,
   Get,
@@ -14,8 +15,7 @@ import {
 import { ParkingSessionsService } from './parking-sessions.service';
 import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
-import { ParkingSessionStatus } from '@prisma/client';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('parking-sessions')

@@ -2,17 +2,16 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
-
 import { AppService } from './app.service';
 
-import { AuthModule } from '../auth/auth.module';
-import { UsersModule } from '../users/users.module';
-import { SectorsModule } from '../sectors/sectors.module';
-import { VehiclesModule } from '../vehicles/vehicles.module';
-import { PrismaModule } from '../../services/prisma/prisma.module';
-import { VehicleTypesModule } from '../vehicle-types/vehicle-types.module';
-import { ParkingSpacesModule } from '../parking-spaces/parking-spaces.module';
-import { ParkingSessionsModule } from '../parking-sessions/parking-sessions.module';
+import { AuthModule } from '@/modules/auth/auth.module';
+import { UsersModule } from '@/modules/users/users.module';
+import { SectorsModule } from '@/modules/sectors/sectors.module';
+import { VehiclesModule } from '@/modules/vehicles/vehicles.module';
+import { VehicleTypesModule } from '@/modules/vehicle-types/vehicle-types.module';
+import { ParkingSpacesModule } from '@/modules/parking-spaces/parking-spaces.module';
+import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessions.module';
+import { PrismaModule } from '@/services/prisma/prisma.module';
 
 @Module({
   imports: [
