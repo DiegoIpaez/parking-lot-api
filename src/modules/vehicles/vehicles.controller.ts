@@ -32,11 +32,6 @@ export class VehiclesController {
     return this.vehiclesService.findAll(query);
   }
 
-  @Get('license/:licensePlate')
-  findByLicensePlate(@Param('licensePlate') licensePlate: string) {
-    return this.vehiclesService.findByLicensePlate(licensePlate);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.vehiclesService.findOne(id);
