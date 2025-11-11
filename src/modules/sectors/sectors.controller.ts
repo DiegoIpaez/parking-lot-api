@@ -8,11 +8,14 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { SectorsService } from './sectors.service';
 import { CreateSectorDto } from './dto/create-sector.dto';
 import { UpdateSectorDto } from './dto/update-sector.dto';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('sectors')
 export class SectorsController {
   constructor(private readonly sectorsService: SectorsService) {}

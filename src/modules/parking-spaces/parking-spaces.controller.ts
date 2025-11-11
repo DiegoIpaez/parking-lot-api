@@ -1,3 +1,4 @@
+import { ParkingSpaceStatus } from '@prisma/client';
 import {
   Controller,
   Get,
@@ -9,12 +10,14 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ParkingSpacesService } from './parking-spaces.service';
 import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
-import { ParkingSpaceStatus } from '@prisma/client';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('parking-spaces')
 export class ParkingSpacesController {
   constructor(private readonly parkingSpacesService: ParkingSpacesService) {}

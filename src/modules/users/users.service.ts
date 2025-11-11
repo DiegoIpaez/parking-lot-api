@@ -1,12 +1,12 @@
+import * as bcrypt from 'bcrypt';
 import {
   Injectable,
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { PrismaService } from '../../services/prisma/prisma.service';
+import { PrismaService } from '@/services/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +23,7 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userData } = createUserDto;
 
     return this.prisma.user.create({
@@ -30,31 +31,13 @@ export class UsersService {
         ...userData,
         password: hashedPassword,
       },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      omit: { password: true },
     });
   }
 
   async findAll() {
     return this.prisma.user.findMany({
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      omit: { password: true },
       orderBy: {
         createdAt: 'desc',
       },
@@ -64,22 +47,12 @@ export class UsersService {
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      omit: { password: true },
     });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-
     return user;
   }
 
@@ -92,7 +65,7 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
 
-    const dataToUpdate: any = { ...updateUserDto };
+    const dataToUpdate = { ...updateUserDto };
 
     if (updateUserDto.password) {
       dataToUpdate.password = await bcrypt.hash(updateUserDto.password, 10);
@@ -101,16 +74,7 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: dataToUpdate,
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      omit: { password: true },
     });
   }
 
@@ -120,16 +84,7 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: { isActive: false },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      omit: { password: true },
     });
   }
 }
