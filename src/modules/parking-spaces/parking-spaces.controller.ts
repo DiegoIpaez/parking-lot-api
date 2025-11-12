@@ -1,4 +1,3 @@
-import { ParkingSpaceStatus } from '@prisma/client';
 import {
   Controller,
   Get,
@@ -13,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ParkingSpacesService } from './parking-spaces.service';
+import { FindParkingSpacesDto } from './dto/find-parking-spaces.dto';
 import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
@@ -28,11 +28,8 @@ export class ParkingSpacesController {
   }
 
   @Get()
-  findAll(
-    @Query('sectorId') sectorId?: number,
-    @Query('status') status?: ParkingSpaceStatus
-  ) {
-    return this.parkingSpacesService.findAll(sectorId, status);
+  findAll(@Query() query: FindParkingSpacesDto) {
+    return this.parkingSpacesService.findAll(query);
   }
 
   @Get(':id')

@@ -9,11 +9,13 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { FindVehiclesDto } from './dto/find-vehicle.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('vehicles')
@@ -26,13 +28,8 @@ export class VehiclesController {
   }
 
   @Get()
-  findAll() {
-    return this.vehiclesService.findAll();
-  }
-
-  @Get('license/:licensePlate')
-  findByLicensePlate(@Param('licensePlate') licensePlate: string) {
-    return this.vehiclesService.findByLicensePlate(licensePlate);
+  findAll(@Query() query: FindVehiclesDto) {
+    return this.vehiclesService.findAll(query);
   }
 
   @Get(':id')

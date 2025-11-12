@@ -1,4 +1,3 @@
-import { ParkingSessionStatus } from '@prisma/client';
 import {
   Controller,
   Get,
@@ -13,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ParkingSessionsService } from './parking-sessions.service';
+import { FindParkingSessionsDto } from './dto/find-parking-sessions.dto';
 import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
@@ -30,14 +30,8 @@ export class ParkingSessionsController {
   }
 
   @Get()
-  findAll(
-    @Query('status') status?: ParkingSessionStatus,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string
-  ) {
-    const start = startDate ? new Date(startDate) : undefined;
-    const end = endDate ? new Date(endDate) : undefined;
-    return this.parkingSessionsService.findAll(status, start, end);
+  findAll(@Query() query: FindParkingSessionsDto) {
+    return this.parkingSessionsService.findAll(query);
   }
 
   @Get(':id')

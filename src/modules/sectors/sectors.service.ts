@@ -1,7 +1,10 @@
+import { ParkingSessionStatus, Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma/prisma.service';
-import { CreateSectorDto } from './dto/create-sector.dto';
+import { FindSectorsDto } from './dto/find-sectors.dto';
 import { UpdateSectorDto } from './dto/update-sector.dto';
+import { CreateSectorDto } from './dto/create-sector.dto';
+import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class SectorsService {
@@ -13,14 +16,62 @@ export class SectorsService {
     });
   }
 
-  async findAll() {
-    return this.prisma.sector.findMany({
+  async findAll(query: FindSectorsDto) {
+    const { page, limit, showAll } = query;
+    const whereClause: Prisma.SectorWhereInput = {};
+
+    if (query.name) {
+      whereClause.name = { contains: query.name, mode: 'insensitive' };
+    }
+    if (query.parkingSpaceStatus) {
+      whereClause.parkingSpaces = {
+        some: { status: query.parkingSpaceStatus },
+      };
+    }
+
+    const queryClause: Prisma.SectorFindManyArgs = {
+      where: whereClause,
       include: {
-        parkingSpaces: true,
+        parkingSpaces: {
+          include: {
+            parkingSessions: {
+              take: 1,
+              include: {
+                vehicle: true,
+                checkInUser: true,
+              },
+              where: {
+                status: ParkingSessionStatus.ACTIVE,
+                checkOutTime: null,
+                checkOutUserId: null,
+              },
+            },
+          },
+          orderBy: {
+            number: 'asc',
+          },
+        },
+        _count: true,
       },
       orderBy: {
         name: 'asc',
       },
+    };
+
+    if (!showAll) {
+      queryClause.skip = (page - 1) * limit;
+      queryClause.take = limit;
+    }
+
+    const data = await this.prisma.sector.findMany(queryClause);
+    const totalRecords = await this.prisma.sector.count({ where: whereClause });
+
+    return paginationFormatter({
+      page,
+      limit,
+      data,
+      totalRecords,
+      showAll,
     });
   }
 

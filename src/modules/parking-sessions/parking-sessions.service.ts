@@ -1,4 +1,8 @@
-import { ParkingSpaceStatus, ParkingSessionStatus } from '@prisma/client';
+import {
+  ParkingSpaceStatus,
+  ParkingSessionStatus,
+  Prisma,
+} from '@prisma/client';
 import {
   Injectable,
   NotFoundException,
@@ -8,6 +12,8 @@ import { PrismaService } from '@/services/prisma/prisma.service';
 import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
 import { Decimal } from '@prisma/client/runtime/library';
+import { FindParkingSessionsDto } from './dto/find-parking-sessions.dto';
+import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class ParkingSessionsService {
@@ -83,22 +89,34 @@ export class ParkingSessionsService {
     return session;
   }
 
-  async findAll(
-    status?: ParkingSessionStatus,
-    startDate?: Date,
-    endDate?: Date
-  ) {
-    return this.prisma.parkingSession.findMany({
-      where: {
-        ...(status && { status }),
-        ...(startDate &&
-          endDate && {
-            checkInTime: {
-              gte: startDate,
-              lte: endDate,
-            },
-          }),
-      },
+  async findAll(query: FindParkingSessionsDto) {
+    const { page, limit, showAll } = query;
+    const whereClause: Prisma.ParkingSessionWhereInput = {};
+
+    if (query.checkInTime) {
+      whereClause.checkInTime = { gte: query.checkInTime };
+    }
+    if (query.checkOutTime) {
+      whereClause.checkOutTime = { lte: query.checkOutTime };
+    }
+    if (query.status) {
+      whereClause.status = query.status;
+    }
+    if (query.vehicleId) {
+      whereClause.vehicleId = query.vehicleId;
+    }
+    if (query.parkingSpaceId) {
+      whereClause.parkingSpaceId = query.parkingSpaceId;
+    }
+    if (query.checkInUserId) {
+      whereClause.checkInUserId = query.checkInUserId;
+    }
+    if (query.checkOutUserId) {
+      whereClause.checkOutUserId = query.checkOutUserId;
+    }
+
+    const queryClause: Prisma.ParkingSessionFindManyArgs = {
+      where: whereClause,
       include: {
         vehicle: {
           include: {
@@ -130,6 +148,23 @@ export class ParkingSessionsService {
       orderBy: {
         checkInTime: 'desc',
       },
+    };
+
+    if (!showAll) {
+      queryClause.skip = (page - 1) * limit;
+      queryClause.take = limit;
+    }
+
+    const data = await this.prisma.parkingSession.findMany(queryClause);
+    const totalRecords = await this.prisma.parkingSession.count({
+      where: whereClause,
+    });
+    return paginationFormatter({
+      page,
+      limit,
+      data,
+      totalRecords,
+      showAll,
     });
   }
 

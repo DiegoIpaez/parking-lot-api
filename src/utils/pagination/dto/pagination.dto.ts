@@ -1,0 +1,19 @@
+import { Type } from 'class-transformer';
+import { IsBoolean, IsInt, IsOptional, Min } from 'class-validator';
+
+export class PaginationDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  limit: number = 10;
+
+  @Type(() => Boolean)
+  @IsBoolean()
+  @IsOptional()
+  showAll: boolean = false;
+}

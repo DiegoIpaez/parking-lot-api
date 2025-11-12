@@ -1,8 +1,10 @@
-import { ParkingSpaceStatus } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma/prisma.service';
 import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
+import { FindParkingSpacesDto } from './dto/find-parking-spaces.dto';
+import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class ParkingSpacesService {
@@ -17,16 +19,44 @@ export class ParkingSpacesService {
     });
   }
 
-  async findAll(sectorId?: number, status?: ParkingSpaceStatus) {
-    return this.prisma.parkingSpace.findMany({
-      where: {
-        ...(sectorId && { sectorId }),
-        ...(status && { status }),
-      },
+  async findAll(query: FindParkingSpacesDto) {
+    const { limit, page, showAll } = query;
+
+    const whereClause: Prisma.ParkingSpaceWhereInput = {};
+
+    if (query.sectorId) {
+      whereClause.sectorId = query.sectorId;
+    }
+    if (query.status) {
+      whereClause.status = query.status;
+    }
+    if (query.number) {
+      whereClause.number = query.number;
+    }
+
+    const queryClause: Prisma.ParkingSpaceFindManyArgs = {
+      where: whereClause,
       include: {
         sector: true,
       },
       orderBy: [{ sectorId: 'asc' }, { number: 'asc' }],
+    };
+    if (!showAll) {
+      queryClause.skip = (page - 1) * limit;
+      queryClause.take = limit;
+    }
+
+    const data = await this.prisma.parkingSpace.findMany(queryClause);
+    const totalRecords = await this.prisma.parkingSpace.count({
+      where: whereClause,
+    });
+
+    return paginationFormatter({
+      page,
+      limit,
+      data,
+      totalRecords,
+      showAll,
     });
   }
 

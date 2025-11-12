@@ -9,8 +9,10 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { SectorsService } from './sectors.service';
+import { FindSectorsDto } from './dto/find-sectors.dto';
 import { CreateSectorDto } from './dto/create-sector.dto';
 import { UpdateSectorDto } from './dto/update-sector.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
@@ -26,8 +28,8 @@ export class SectorsController {
   }
 
   @Get()
-  findAll() {
-    return this.sectorsService.findAll();
+  findAll(@Query() query: FindSectorsDto) {
+    return this.sectorsService.findAll(query);
   }
 
   @Get(':id')
