@@ -1,5 +1,11 @@
 import { ParkingSessionStatus } from '@prisma/client';
-import { IsOptional, IsInt, IsEnum, IsDateString } from 'class-validator';
+import {
+  IsOptional,
+  IsInt,
+  IsEnum,
+  IsDateString,
+  IsString,
+} from 'class-validator';
 import { PaginationDto } from '@/utils/pagination/dto/pagination.dto';
 
 export class FindParkingSessionsDto extends PaginationDto {
@@ -30,4 +36,8 @@ export class FindParkingSessionsDto extends PaginationDto {
   @IsOptional()
   @IsEnum(ParkingSessionStatus)
   status?: ParkingSessionStatus;
+
+  @IsString()
+  @IsOptional()
+  vehicleLicensePlate?: string;
 }

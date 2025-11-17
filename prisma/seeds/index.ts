@@ -1,5 +1,5 @@
-import { PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { ParkingSpaceStatus, PrismaClient, UserRole } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -44,9 +44,49 @@ async function seedUsers() {
   });
 }
 
+async function seedVehicleTypes() {
+  await prisma.vehicleType.createMany({
+    data: [
+      { name: 'Auto', ratePerMinute: 1.5, description: 'Vehículo tipo auto' },
+      {
+        name: 'Camioneta',
+        ratePerMinute: 2.0,
+        description: 'Vehículo tipo camioneta',
+      },
+      { name: 'Moto', ratePerMinute: 1.0, description: 'Vehículo tipo moto' },
+    ],
+    skipDuplicates: true,
+  });
+}
+
+export async function seedSectors() {
+  const sectors = Array.from({ length: 3 }, (_, i) => ({
+    name: `Sector ${i + 1}`,
+    description: `Sector número ${i + 1}`,
+  }));
+
+  const createdSectors = await Promise.all(
+    sectors.map((sector) => prisma.sector.create({ data: sector }))
+  );
+
+  const parkingSpaces = createdSectors.flatMap((sector) =>
+    Array.from({ length: 6 }, (_, j) => ({
+      number: j + 1,
+      sectorId: sector.id,
+      status: ParkingSpaceStatus.AVAILABLE,
+    }))
+  );
+
+  await prisma.parkingSpace.createMany({
+    data: parkingSpaces,
+  });
+}
+
 const SEED_LIST_COMMAND = 'list';
 const SEED_COMMANDS: Record<string, () => Promise<void>> = {
   users: seedUsers,
+  sectors: seedSectors,
+  vehicleTypes: seedVehicleTypes,
 };
 
 async function executeSeedCommand(command: string) {
