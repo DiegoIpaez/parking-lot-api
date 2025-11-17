@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { ParkingSessionStatus, Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma/prisma.service';
 import { FindVehiclesDto } from './dto/find-vehicle.dto';
@@ -52,6 +52,15 @@ export class VehiclesService {
         createdAt: 'desc',
       },
     };
+
+    if (query?.notParked) {
+      queryClause.where.parkingSessions = {
+        none: {
+          status: ParkingSessionStatus.ACTIVE,
+        },
+      };
+    }
+
     if (!showAll) {
       queryClause.skip = (page - 1) * limit;
       queryClause.take = limit;
