@@ -114,6 +114,14 @@ export class ParkingSessionsService {
     if (query.checkOutUserId) {
       whereClause.checkOutUserId = query.checkOutUserId;
     }
+    if (query.vehicleLicensePlate) {
+      whereClause.vehicle = {
+        licensePlate: {
+          contains: query.vehicleLicensePlate,
+          mode: 'insensitive',
+        },
+      };
+    }
 
     const queryClause: Prisma.ParkingSessionFindManyArgs = {
       where: whereClause,
