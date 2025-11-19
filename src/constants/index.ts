@@ -1,7 +1,8 @@
 const CORS = {
-  origin: true,
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  credentials: true,
+  allowedHeaders: '*',
+  credentials: false,
 };
 
 export const CONFIG = {
