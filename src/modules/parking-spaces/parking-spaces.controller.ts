@@ -1,3 +1,4 @@
+import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   Controller,
   Get,
@@ -17,6 +18,7 @@ import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('parking-spaces')
 export class ParkingSpacesController {
