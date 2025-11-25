@@ -408,3 +408,5 @@ dist
 # IDEs
 .idea/
 .vscode/
+
+docs/
