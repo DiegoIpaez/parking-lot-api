@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { PrismaModule } from '@/services/prisma/prisma.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,12 +14,19 @@ import { VehiclesModule } from '@/modules/vehicles/vehicles.module';
 import { VehicleTypesModule } from '@/modules/vehicle-types/vehicle-types.module';
 import { ParkingSpacesModule } from '@/modules/parking-spaces/parking-spaces.module';
 import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessions.module';
-import { PrismaModule } from '@/services/prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          limit: 400,
+          ttl: 60_000,
+        },
+      ],
     }),
     PrismaModule,
     SectorsModule,
@@ -28,6 +38,12 @@ import { PrismaModule } from '@/services/prisma/prisma.module';
     ParkingSessionsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
