@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsOptional,
   MinLength,
+  IsBoolean,
 } from 'class-validator';
 import { UserRole } from '@prisma/client';
 
@@ -27,4 +28,8 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }
