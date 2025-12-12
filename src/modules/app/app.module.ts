@@ -12,6 +12,8 @@ import { UsersModule } from '@/modules/users/users.module';
 import { SectorsModule } from '@/modules/sectors/sectors.module';
 import { VehiclesModule } from '@/modules/vehicles/vehicles.module';
 import { VehicleTypesModule } from '@/modules/vehicle-types/vehicle-types.module';
+import { VehicleBrandsModule } from '@/modules/vehicle-brands/vehicle-brands.module';
+import { VehicleModelsModule } from '@/modules/vehicle-models/vehicle-models.module';
 import { ParkingSpacesModule } from '@/modules/parking-spaces/parking-spaces.module';
 import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessions.module';
 
@@ -29,12 +31,14 @@ import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessio
       ],
     }),
     PrismaModule,
+    AuthModule,
+    UsersModule,
+    VehiclesModule,
+    VehicleTypesModule,
+    VehicleBrandsModule,
+    VehicleModelsModule,
     SectorsModule,
     ParkingSpacesModule,
-    VehicleTypesModule,
-    VehiclesModule,
-    UsersModule,
-    AuthModule,
     ParkingSessionsModule,
   ],
   controllers: [AppController],

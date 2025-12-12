@@ -82,11 +82,67 @@ export async function seedSectors() {
   });
 }
 
+async function seedVehicleBrands() {
+  const brands = [
+    'Volkswagen',
+    'Renault',
+    'Ford',
+    'Chevrolet',
+    'Fiat',
+    'Peugeot',
+    'Toyota',
+    'Citroën',
+    'Mercedes-Benz',
+    'Honda',
+    'Nissan',
+    'Kia',
+    'Hyundai',
+    'Jeep',
+  ];
+  await prisma.vehicleBrand.createMany({
+    data: brands.map((name) => ({ name })),
+    skipDuplicates: true,
+  });
+}
+
+async function seedVehicleModels() {
+  const modelsByBrand: Record<string, string[]> = {
+    Volkswagen: ['Gol', 'Voyage', 'Amarok', 'T-Cross'],
+    Renault: ['Kangoo', 'Sandero', 'Duster'],
+    Ford: ['Fiesta', 'Focus', 'Ranger', 'EcoSport'],
+    Chevrolet: ['Onix', 'Prisma', 'S10', 'Tracker'],
+    Fiat: ['Cronos', 'Toro', 'Strada', 'Argo'],
+    Peugeot: ['208', '2008', 'Partner'],
+    Toyota: ['Corolla', 'Hilux', 'Etios', 'Yaris'],
+    Citroën: ['C3', 'Berlingo', 'C4 Cactus'],
+    'Mercedes-Benz': ['Sprinter', 'Vito'],
+    Honda: ['Civic', 'Fit', 'HR-V'],
+    Nissan: ['Versa', 'Kicks', 'Frontier'],
+    Kia: ['Rio', 'Seltos', 'Sportage'],
+    Hyundai: ['HB20', 'Creta', 'Tucson'],
+    Jeep: ['Renegade', 'Compass'],
+  };
+
+  const brands = await prisma.vehicleBrand.findMany();
+  const modelsData = brands.flatMap((brand) => {
+    const models = modelsByBrand[brand.name] || [];
+    return models.map((model) => ({ name: model, vehicleBrandId: brand.id }));
+  });
+  if (modelsData.length) {
+    await prisma.vehicleModel.createMany({
+      data: modelsData,
+      skipDuplicates: true,
+    });
+  }
+}
+
 const SEED_LIST_COMMAND = 'list';
 const SEED_COMMANDS: Record<string, () => Promise<void>> = {
   users: seedUsers,
   sectors: seedSectors,
   vehicleTypes: seedVehicleTypes,
+  vehicleBrands: seedVehicleBrands,
+  vehicleModels: seedVehicleModels,
 };
 
 async function executeSeedCommand(command: string) {
@@ -123,4 +179,5 @@ async function main(): Promise<void> {
     await prisma.$disconnect();
   }
 }
-main();
+
+void main();
