@@ -87,7 +87,7 @@ model VehicleModel {
 
   vehicles Vehicle[]
 
-  brand VehicleBrand @relation(fields: [vehicleBrandId], references: [id], onDelete: Cascade)
+  vehicleBrand VehicleBrand @relation(fields: [vehicleBrandId], references: [id], onDelete: Cascade)
 
   @@map("vehicle_models")
 }
