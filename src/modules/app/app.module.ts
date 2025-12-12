@@ -4,9 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from '@/services/prisma/prisma.module';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
 import { AuthModule } from '@/modules/auth/auth.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { SectorsModule } from '@/modules/sectors/sectors.module';
@@ -41,9 +38,8 @@ import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessio
     ParkingSpacesModule,
     ParkingSessionsModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
