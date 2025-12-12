@@ -65,19 +65,46 @@ model VehicleType {
   @@map("vehicle_types")
 }
 
+model VehicleBrand {
+  id        Int      @id @default(autoincrement())
+  name      String
+  deleted   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  vehicleModels VehicleModel[]
+
+  @@map("vehicle_brands")
+}
+
+model VehicleModel {
+  id             Int      @id @default(autoincrement())
+  name           String
+  vehicleBrandId Int
+  deleted        Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  vehicles Vehicle[]
+
+  brand VehicleBrand @relation(fields: [vehicleBrandId], references: [id], onDelete: Cascade)
+
+  @@map("vehicle_models")
+}
+
 model Vehicle {
-  id            Int      @id @default(autoincrement())
-  licensePlate  String   @unique
-  brand         String
-  model         String
-  color         String
-  vehicleTypeId Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  licensePlate   String   @unique
+  vehicleTypeId  Int
+  vehicleModelId Int
+  deleted        Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   parkingSessions ParkingSession[]
 
-  vehicleType VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
+  vehicleModel VehicleModel @relation(fields: [vehicleModelId], references: [id], onDelete: Restrict)
+  vehicleType  VehicleType  @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
 
   @@map("vehicles")
 }
