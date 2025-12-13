@@ -7,17 +7,13 @@ export class CreateVehicleDto {
 
   @IsString()
   @IsNotEmpty()
-  brand: string;
-
-  @IsString()
-  @IsNotEmpty()
-  model: string;
-
-  @IsString()
-  @IsNotEmpty()
   color: string;
 
   @IsInt()
   @IsNotEmpty()
   vehicleTypeId: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  vehicleModelId: number;
 }

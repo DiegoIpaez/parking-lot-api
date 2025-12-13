@@ -15,6 +15,11 @@ export class VehiclesService {
       data: createVehicleDto,
       include: {
         vehicleType: true,
+        vehicleModel: {
+          include: {
+            vehicleBrand: true,
+          },
+        },
       },
     });
   }
@@ -23,18 +28,22 @@ export class VehiclesService {
     const { limit, page, showAll } = query;
 
     const whereClause: Prisma.VehicleWhereInput = {
+      deleted: false,
       ...(query?.licensePlate && {
         licensePlate: { contains: query.licensePlate, mode: 'insensitive' },
       }),
       ...(query?.vehicleTypeId && { vehicleTypeId: query.vehicleTypeId }),
-      ...(query?.color && { color: query.color }),
-      ...(query?.brand && { brand: query.brand }),
-      ...(query?.model && { model: query.model }),
+      ...(query?.vehicleModelId && { vehicleModelId: query.vehicleModelId }),
     };
     const queryClause: Prisma.VehicleFindManyArgs = {
       where: whereClause,
       include: {
         vehicleType: true,
+        vehicleModel: {
+          include: {
+            vehicleBrand: true,
+          },
+        },
         parkingSessions: {
           include: {
             parkingSpace: {
@@ -81,10 +90,15 @@ export class VehiclesService {
   }
 
   async findOne(id: number) {
-    const vehicle = await this.prisma.vehicle.findUnique({
-      where: { id },
+    const vehicle = await this.prisma.vehicle.findFirst({
+      where: { id, deleted: false },
       include: {
         vehicleType: true,
+        vehicleModel: {
+          include: {
+            vehicleBrand: true,
+          },
+        },
         parkingSessions: {
           include: {
             parkingSpace: {
@@ -115,15 +129,20 @@ export class VehiclesService {
       data: updateVehicleDto,
       include: {
         vehicleType: true,
+        vehicleModel: {
+          include: {
+            vehicleBrand: true,
+          },
+        },
       },
     });
   }
 
   async remove(id: number) {
     await this.findOne(id);
-
-    return this.prisma.vehicle.delete({
+    return this.prisma.vehicle.update({
       where: { id },
+      data: { deleted: true },
     });
   }
 }

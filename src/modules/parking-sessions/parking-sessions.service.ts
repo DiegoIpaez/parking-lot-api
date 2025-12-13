@@ -63,6 +63,11 @@ export class ParkingSessionsService {
           vehicle: {
             include: {
               vehicleType: true,
+              vehicleModel: {
+                include: {
+                  vehicleBrand: true,
+                },
+              },
             },
           },
           parkingSpace: {
@@ -129,6 +134,11 @@ export class ParkingSessionsService {
         vehicle: {
           include: {
             vehicleType: true,
+            vehicleModel: {
+              include: {
+                vehicleBrand: true,
+              },
+            },
           },
         },
         parkingSpace: {
@@ -183,6 +193,11 @@ export class ParkingSessionsService {
         vehicle: {
           include: {
             vehicleType: true,
+            vehicleModel: {
+              include: {
+                vehicleBrand: true,
+              },
+            },
           },
         },
         parkingSpace: {
@@ -245,6 +260,11 @@ export class ParkingSessionsService {
           vehicle: {
             include: {
               vehicleType: true,
+              vehicleModel: {
+                include: {
+                  vehicleBrand: true,
+                },
+              },
             },
           },
           parkingSpace: {
