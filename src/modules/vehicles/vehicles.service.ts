@@ -25,12 +25,12 @@ export class VehiclesService {
   }
 
   async findAll(query?: FindVehiclesDto) {
-    const { limit, page, showAll } = query;
+    const { limit, page, showAll, search } = query;
 
     const whereClause: Prisma.VehicleWhereInput = {
       deleted: false,
-      ...(query?.licensePlate && {
-        licensePlate: { contains: query.licensePlate, mode: 'insensitive' },
+      ...(search && {
+        licensePlate: { contains: search, mode: Prisma.QueryMode.insensitive },
       }),
       ...(query?.vehicleTypeId && { vehicleTypeId: query.vehicleTypeId }),
       ...(query?.vehicleModelId && { vehicleModelId: query.vehicleModelId }),
@@ -53,12 +53,12 @@ export class VehiclesService {
             },
           },
           orderBy: {
-            checkInTime: 'desc',
+            checkInTime: Prisma.SortOrder.desc,
           },
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: Prisma.SortOrder.desc,
       },
     };
 
@@ -108,7 +108,7 @@ export class VehiclesService {
             },
           },
           orderBy: {
-            checkInTime: 'desc',
+            checkInTime: Prisma.SortOrder.desc,
           },
         },
       },

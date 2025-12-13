@@ -17,14 +17,18 @@ export class VehicleTypesService {
   }
 
   async findAll(query: FindVehicleTypesDto) {
-    const { page, limit, showAll, name } = query;
+    const { page, limit, showAll, search } = query;
     const whereClause: Prisma.VehicleTypeWhereInput = {};
-    if (name) whereClause.name = { contains: name, mode: 'insensitive' };
+    if (search)
+      whereClause.name = {
+        contains: search,
+        mode: Prisma.QueryMode.insensitive,
+      };
 
     const queryClause: Prisma.VehicleTypeFindManyArgs = {
       where: whereClause,
       orderBy: {
-        name: 'asc',
+        name: Prisma.SortOrder.desc,
       },
     };
     if (!showAll) {

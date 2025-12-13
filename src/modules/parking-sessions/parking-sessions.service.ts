@@ -95,7 +95,7 @@ export class ParkingSessionsService {
   }
 
   async findAll(query: FindParkingSessionsDto) {
-    const { page, limit, showAll } = query;
+    const { page, limit, showAll, search } = query;
     const whereClause: Prisma.ParkingSessionWhereInput = {};
 
     if (query.checkInTime) {
@@ -119,11 +119,11 @@ export class ParkingSessionsService {
     if (query.checkOutUserId) {
       whereClause.checkOutUserId = query.checkOutUserId;
     }
-    if (query.vehicleLicensePlate) {
+    if (query.vehicleLicensePlate || search) {
       whereClause.vehicle = {
         licensePlate: {
-          contains: query.vehicleLicensePlate,
-          mode: 'insensitive',
+          contains: query.vehicleLicensePlate || search,
+          mode: Prisma.QueryMode.insensitive,
         },
       };
     }
@@ -164,7 +164,7 @@ export class ParkingSessionsService {
         },
       },
       orderBy: {
-        checkInTime: 'desc',
+        checkInTime: Prisma.SortOrder.desc,
       },
     };
 
