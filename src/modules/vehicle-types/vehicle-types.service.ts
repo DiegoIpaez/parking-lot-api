@@ -54,7 +54,7 @@ export class VehicleTypesService {
     const vehicleType = await this.prisma.vehicleType.findUnique({
       where: { id },
       include: {
-        vehicles: true,
+        vehicleModels: true,
       },
     });
 

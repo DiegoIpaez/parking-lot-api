@@ -62,9 +62,9 @@ export class ParkingSessionsService {
         include: {
           vehicle: {
             include: {
-              vehicleType: true,
               vehicleModel: {
                 include: {
+                  vehicleType: true,
                   vehicleBrand: true,
                 },
               },
@@ -133,9 +133,9 @@ export class ParkingSessionsService {
       include: {
         vehicle: {
           include: {
-            vehicleType: true,
             vehicleModel: {
               include: {
+                vehicleType: true,
                 vehicleBrand: true,
               },
             },
@@ -192,9 +192,9 @@ export class ParkingSessionsService {
       include: {
         vehicle: {
           include: {
-            vehicleType: true,
             vehicleModel: {
               include: {
+                vehicleType: true,
                 vehicleBrand: true,
               },
             },
@@ -243,7 +243,9 @@ export class ParkingSessionsService {
       (checkOutTime.getTime() - session.checkInTime.getTime()) / (1000 * 60)
     );
 
-    const ratePerMinute = session.vehicle.vehicleType.ratePerMinute;
+    const ratePerMinute =
+      session?.vehicle?.vehicleModel?.vehicleType?.ratePerMinute || 0;
+
     const totalAmount = new Decimal(durationMinutes).mul(ratePerMinute);
 
     const [updatedSession] = await this.prisma.$transaction([
@@ -259,9 +261,9 @@ export class ParkingSessionsService {
         include: {
           vehicle: {
             include: {
-              vehicleType: true,
               vehicleModel: {
                 include: {
+                  vehicleType: true,
                   vehicleBrand: true,
                 },
               },

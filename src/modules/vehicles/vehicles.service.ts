@@ -14,9 +14,9 @@ export class VehiclesService {
     return this.prisma.vehicle.create({
       data: createVehicleDto,
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
@@ -38,9 +38,9 @@ export class VehiclesService {
     const queryClause: Prisma.VehicleFindManyArgs = {
       where: whereClause,
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
@@ -93,9 +93,9 @@ export class VehiclesService {
     const vehicle = await this.prisma.vehicle.findFirst({
       where: { id, deleted: false },
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
@@ -128,9 +128,9 @@ export class VehiclesService {
       where: { id },
       data: updateVehicleDto,
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
