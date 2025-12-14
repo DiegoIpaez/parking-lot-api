@@ -2,14 +2,12 @@
   Warnings:
 
   - You are about to drop the column `brand` on the `vehicles` table. All the data in the column will be lost.
-  - You are about to drop the column `color` on the `vehicles` table. All the data in the column will be lost.
   - You are about to drop the column `model` on the `vehicles` table. All the data in the column will be lost.
   - Added the required column `vehicleModelId` to the `vehicles` table without a default value. This is not possible if the table is not empty.
 
 */
 -- AlterTable
 ALTER TABLE "vehicles" DROP COLUMN "brand",
-DROP COLUMN "color",
 DROP COLUMN "model",
 ADD COLUMN     "deleted" BOOLEAN NOT NULL DEFAULT false,
 ADD COLUMN     "vehicleModelId" INTEGER NOT NULL;

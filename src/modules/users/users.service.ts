@@ -39,19 +39,22 @@ export class UsersService {
   }
 
   async findAll(query: FindUsersDto) {
-    const { page, limit, showAll } = query;
+    const { page, limit, showAll, search } = query;
     const whereClause: Prisma.UserWhereInput = {};
 
     if (query.role) whereClause.role = query.role;
-    if (query.email) {
-      whereClause.email = { contains: query.email, mode: 'insensitive' };
+    if (search) {
+      whereClause.email = {
+        contains: search,
+        mode: Prisma.QueryMode.insensitive,
+      };
     }
 
     const queryClause: Prisma.UserFindManyArgs = {
       where: whereClause,
       omit: { password: true },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: Prisma.SortOrder.desc,
       },
     };
     if (!showAll) {

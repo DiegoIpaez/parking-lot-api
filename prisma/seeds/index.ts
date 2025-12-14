@@ -106,27 +106,93 @@ async function seedVehicleBrands() {
 }
 
 async function seedVehicleModels() {
-  const modelsByBrand: Record<string, string[]> = {
-    Volkswagen: ['Gol', 'Voyage', 'Amarok', 'T-Cross'],
-    Renault: ['Kangoo', 'Sandero', 'Duster'],
-    Ford: ['Fiesta', 'Focus', 'Ranger', 'EcoSport'],
-    Chevrolet: ['Onix', 'Prisma', 'S10', 'Tracker'],
-    Fiat: ['Cronos', 'Toro', 'Strada', 'Argo'],
-    Peugeot: ['208', '2008', 'Partner'],
-    Toyota: ['Corolla', 'Hilux', 'Etios', 'Yaris'],
-    Citroën: ['C3', 'Berlingo', 'C4 Cactus'],
-    'Mercedes-Benz': ['Sprinter', 'Vito'],
-    Honda: ['Civic', 'Fit', 'HR-V'],
-    Nissan: ['Versa', 'Kicks', 'Frontier'],
-    Kia: ['Rio', 'Seltos', 'Sportage'],
-    Hyundai: ['HB20', 'Creta', 'Tucson'],
-    Jeep: ['Renegade', 'Compass'],
+  const modelsByBrand: Record<string, { name: string; type: string }[]> = {
+    Volkswagen: [
+      { name: 'Gol', type: 'Auto' },
+      { name: 'Voyage', type: 'Auto' },
+      { name: 'Amarok', type: 'Camioneta' },
+      { name: 'T-Cross', type: 'Auto' },
+    ],
+    Renault: [
+      { name: 'Kangoo', type: 'Camioneta' },
+      { name: 'Sandero', type: 'Auto' },
+      { name: 'Duster', type: 'Camioneta' },
+    ],
+    Ford: [
+      { name: 'Fiesta', type: 'Auto' },
+      { name: 'Focus', type: 'Auto' },
+      { name: 'Ranger', type: 'Camioneta' },
+      { name: 'EcoSport', type: 'Camioneta' },
+    ],
+    Chevrolet: [
+      { name: 'Onix', type: 'Auto' },
+      { name: 'Prisma', type: 'Auto' },
+      { name: 'S10', type: 'Camioneta' },
+      { name: 'Tracker', type: 'Camioneta' },
+    ],
+    Fiat: [
+      { name: 'Cronos', type: 'Auto' },
+      { name: 'Toro', type: 'Camioneta' },
+      { name: 'Strada', type: 'Camioneta' },
+      { name: 'Argo', type: 'Auto' },
+    ],
+    Peugeot: [
+      { name: '208', type: 'Auto' },
+      { name: '2008', type: 'Auto' },
+      { name: 'Partner', type: 'Camioneta' },
+    ],
+    Toyota: [
+      { name: 'Corolla', type: 'Auto' },
+      { name: 'Hilux', type: 'Camioneta' },
+      { name: 'Etios', type: 'Auto' },
+      { name: 'Yaris', type: 'Auto' },
+    ],
+    Citroën: [
+      { name: 'C3', type: 'Auto' },
+      { name: 'Berlingo', type: 'Camioneta' },
+      { name: 'C4 Cactus', type: 'Auto' },
+    ],
+    'Mercedes-Benz': [
+      { name: 'Sprinter', type: 'Camioneta' },
+      { name: 'Vito', type: 'Camioneta' },
+    ],
+    Honda: [
+      { name: 'Civic', type: 'Auto' },
+      { name: 'Fit', type: 'Auto' },
+      { name: 'HR-V', type: 'Camioneta' },
+    ],
+    Nissan: [
+      { name: 'Versa', type: 'Auto' },
+      { name: 'Kicks', type: 'Camioneta' },
+      { name: 'Frontier', type: 'Camioneta' },
+    ],
+    Kia: [
+      { name: 'Rio', type: 'Auto' },
+      { name: 'Seltos', type: 'Camioneta' },
+      { name: 'Sportage', type: 'Camioneta' },
+    ],
+    Hyundai: [
+      { name: 'HB20', type: 'Auto' },
+      { name: 'Creta', type: 'Camioneta' },
+      { name: 'Tucson', type: 'Camioneta' },
+    ],
+    Jeep: [
+      { name: 'Renegade', type: 'Camioneta' },
+      { name: 'Compass', type: 'Camioneta' },
+    ],
   };
+
+  const vehicleTypes = await prisma.vehicleType.findMany();
+  const typeMap = Object.fromEntries(vehicleTypes.map((t) => [t.name, t.id]));
 
   const brands = await prisma.vehicleBrand.findMany();
   const modelsData = brands.flatMap((brand) => {
     const models = modelsByBrand[brand.name] || [];
-    return models.map((model) => ({ name: model, vehicleBrandId: brand.id }));
+    return models.map((model) => ({
+      name: model.name,
+      vehicleBrandId: brand.id,
+      vehicleTypeId: typeMap[model.type] || typeMap['Auto'],
+    }));
   });
   if (modelsData.length) {
     await prisma.vehicleModel.createMany({

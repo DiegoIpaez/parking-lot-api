@@ -60,7 +60,7 @@ model VehicleType {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  vehicles Vehicle[]
+  vehicleModels VehicleModel[]
 
   @@map("vehicle_types")
 }
@@ -81,6 +81,7 @@ model VehicleModel {
   id             Int      @id @default(autoincrement())
   name           String
   vehicleBrandId Int
+  vehicleTypeId  Int
   deleted        Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -88,14 +89,15 @@ model VehicleModel {
   vehicles Vehicle[]
 
   vehicleBrand VehicleBrand @relation(fields: [vehicleBrandId], references: [id], onDelete: Cascade)
+  vehicleType  VehicleType  @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
 
   @@map("vehicle_models")
 }
 
 model Vehicle {
   id             Int      @id @default(autoincrement())
+  color          String
   licensePlate   String   @unique
-  vehicleTypeId  Int
   vehicleModelId Int
   deleted        Boolean  @default(false)
   createdAt      DateTime @default(now())
@@ -104,7 +106,6 @@ model Vehicle {
   parkingSessions ParkingSession[]
 
   vehicleModel VehicleModel @relation(fields: [vehicleModelId], references: [id], onDelete: Restrict)
-  vehicleType  VehicleType  @relation(fields: [vehicleTypeId], references: [id], onDelete: Restrict)
 
   @@map("vehicles")
 }

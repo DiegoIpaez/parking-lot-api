@@ -9,16 +9,19 @@ export class VehicleBrandsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(query: FindVehicleBrandsDto) {
-    const { page, limit, showAll } = query;
+    const { page, limit, showAll, search } = query;
     const whereClause: Prisma.VehicleBrandWhereInput = { deleted: false };
-    if (query?.name) {
-      whereClause.name = { contains: query.name, mode: 'insensitive' };
+    if (search) {
+      whereClause.name = {
+        contains: search,
+        mode: Prisma.QueryMode.insensitive,
+      };
     }
 
     const queryClause: Prisma.VehicleBrandFindManyArgs = {
       where: whereClause,
       orderBy: {
-        createdAt: 'desc',
+        createdAt: Prisma.SortOrder.asc,
       },
     };
     if (!showAll) {

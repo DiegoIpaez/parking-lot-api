@@ -20,7 +20,7 @@ export class ParkingSpacesService {
   }
 
   async findAll(query: FindParkingSpacesDto) {
-    const { limit, page, showAll } = query;
+    const { limit, page, showAll, search } = query;
 
     const whereClause: Prisma.ParkingSpaceWhereInput = {};
 
@@ -30,8 +30,8 @@ export class ParkingSpacesService {
     if (query.status) {
       whereClause.status = query.status;
     }
-    if (query.number) {
-      whereClause.number = query.number;
+    if (query.number || !isNaN(Number(search))) {
+      whereClause.number = query.number || Number(search);
     }
 
     const queryClause: Prisma.ParkingSpaceFindManyArgs = {
@@ -39,7 +39,10 @@ export class ParkingSpacesService {
       include: {
         sector: true,
       },
-      orderBy: [{ sectorId: 'asc' }, { number: 'asc' }],
+      orderBy: [
+        { sectorId: Prisma.SortOrder.asc },
+        { number: Prisma.SortOrder.asc },
+      ],
     };
     if (!showAll) {
       queryClause.skip = (page - 1) * limit;

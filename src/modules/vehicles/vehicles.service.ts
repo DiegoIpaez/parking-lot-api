@@ -14,9 +14,9 @@ export class VehiclesService {
     return this.prisma.vehicle.create({
       data: createVehicleDto,
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
@@ -25,12 +25,12 @@ export class VehiclesService {
   }
 
   async findAll(query?: FindVehiclesDto) {
-    const { limit, page, showAll } = query;
+    const { limit, page, showAll, search } = query;
 
     const whereClause: Prisma.VehicleWhereInput = {
       deleted: false,
-      ...(query?.licensePlate && {
-        licensePlate: { contains: query.licensePlate, mode: 'insensitive' },
+      ...(search && {
+        licensePlate: { contains: search, mode: Prisma.QueryMode.insensitive },
       }),
       ...(query?.vehicleTypeId && { vehicleTypeId: query.vehicleTypeId }),
       ...(query?.vehicleModelId && { vehicleModelId: query.vehicleModelId }),
@@ -38,9 +38,9 @@ export class VehiclesService {
     const queryClause: Prisma.VehicleFindManyArgs = {
       where: whereClause,
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
@@ -53,12 +53,12 @@ export class VehiclesService {
             },
           },
           orderBy: {
-            checkInTime: 'desc',
+            checkInTime: Prisma.SortOrder.desc,
           },
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: Prisma.SortOrder.desc,
       },
     };
 
@@ -93,9 +93,9 @@ export class VehiclesService {
     const vehicle = await this.prisma.vehicle.findFirst({
       where: { id, deleted: false },
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },
@@ -108,7 +108,7 @@ export class VehiclesService {
             },
           },
           orderBy: {
-            checkInTime: 'desc',
+            checkInTime: Prisma.SortOrder.desc,
           },
         },
       },
@@ -128,9 +128,9 @@ export class VehiclesService {
       where: { id },
       data: updateVehicleDto,
       include: {
-        vehicleType: true,
         vehicleModel: {
           include: {
+            vehicleType: true,
             vehicleBrand: true,
           },
         },

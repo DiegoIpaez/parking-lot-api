@@ -1,12 +1,10 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
 import { PaginationDto } from '@/utils/pagination/dto/pagination.dto';
+import { Type } from 'class-transformer';
 
 export class FindVehicleModelsDto extends PaginationDto {
-  @IsString()
   @IsOptional()
-  name?: string;
-
+  @Type(() => Number)
   @IsInt()
-  @IsOptional()
   vehicleBrandId?: number;
 }

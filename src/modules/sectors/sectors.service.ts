@@ -17,11 +17,14 @@ export class SectorsService {
   }
 
   async findAll(query: FindSectorsDto) {
-    const { page, limit, showAll } = query;
+    const { page, limit, showAll, search } = query;
     const whereClause: Prisma.SectorWhereInput = {};
 
-    if (query.name) {
-      whereClause.name = { contains: query.name, mode: 'insensitive' };
+    if (search) {
+      whereClause.name = {
+        contains: search,
+        mode: Prisma.QueryMode.insensitive,
+      };
     }
     if (query.parkingSpaceStatus) {
       whereClause.parkingSpaces = {
@@ -48,13 +51,13 @@ export class SectorsService {
             },
           },
           orderBy: {
-            number: 'asc',
+            number: Prisma.SortOrder.asc,
           },
         },
         _count: true,
       },
       orderBy: {
-        name: 'asc',
+        name: Prisma.SortOrder.asc,
       },
     };
 

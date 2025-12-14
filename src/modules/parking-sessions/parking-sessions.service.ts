@@ -62,9 +62,9 @@ export class ParkingSessionsService {
         include: {
           vehicle: {
             include: {
-              vehicleType: true,
               vehicleModel: {
                 include: {
+                  vehicleType: true,
                   vehicleBrand: true,
                 },
               },
@@ -95,7 +95,7 @@ export class ParkingSessionsService {
   }
 
   async findAll(query: FindParkingSessionsDto) {
-    const { page, limit, showAll } = query;
+    const { page, limit, showAll, search } = query;
     const whereClause: Prisma.ParkingSessionWhereInput = {};
 
     if (query.checkInTime) {
@@ -119,11 +119,11 @@ export class ParkingSessionsService {
     if (query.checkOutUserId) {
       whereClause.checkOutUserId = query.checkOutUserId;
     }
-    if (query.vehicleLicensePlate) {
+    if (query.vehicleLicensePlate || search) {
       whereClause.vehicle = {
         licensePlate: {
-          contains: query.vehicleLicensePlate,
-          mode: 'insensitive',
+          contains: query.vehicleLicensePlate || search,
+          mode: Prisma.QueryMode.insensitive,
         },
       };
     }
@@ -133,9 +133,9 @@ export class ParkingSessionsService {
       include: {
         vehicle: {
           include: {
-            vehicleType: true,
             vehicleModel: {
               include: {
+                vehicleType: true,
                 vehicleBrand: true,
               },
             },
@@ -164,7 +164,7 @@ export class ParkingSessionsService {
         },
       },
       orderBy: {
-        checkInTime: 'desc',
+        checkInTime: Prisma.SortOrder.desc,
       },
     };
 
@@ -192,9 +192,9 @@ export class ParkingSessionsService {
       include: {
         vehicle: {
           include: {
-            vehicleType: true,
             vehicleModel: {
               include: {
+                vehicleType: true,
                 vehicleBrand: true,
               },
             },
@@ -243,7 +243,9 @@ export class ParkingSessionsService {
       (checkOutTime.getTime() - session.checkInTime.getTime()) / (1000 * 60)
     );
 
-    const ratePerMinute = session.vehicle.vehicleType.ratePerMinute;
+    const ratePerMinute =
+      session?.vehicle?.vehicleModel?.vehicleType?.ratePerMinute || 0;
+
     const totalAmount = new Decimal(durationMinutes).mul(ratePerMinute);
 
     const [updatedSession] = await this.prisma.$transaction([
@@ -259,9 +261,9 @@ export class ParkingSessionsService {
         include: {
           vehicle: {
             include: {
-              vehicleType: true,
               vehicleModel: {
                 include: {
+                  vehicleType: true,
                   vehicleBrand: true,
                 },
               },

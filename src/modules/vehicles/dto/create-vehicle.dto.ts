@@ -11,9 +11,5 @@ export class CreateVehicleDto {
 
   @IsInt()
   @IsNotEmpty()
-  vehicleTypeId: number;
-
-  @IsInt()
-  @IsNotEmpty()
   vehicleModelId: number;
 }
