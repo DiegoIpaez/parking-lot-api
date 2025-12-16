@@ -6,9 +6,9 @@ import {
   IsDateString,
   IsString,
 } from 'class-validator';
-import { PaginationDto } from '@/utils/pagination/dto/pagination.dto';
+import { PaginationQueryDto } from '@/contracts/dto/pagination-query.dto';
 
-export class FindParkingSessionsDto extends PaginationDto {
+export class FindParkingSessionsDto extends PaginationQueryDto {
   @IsOptional()
   @IsInt()
   vehicleId?: number;

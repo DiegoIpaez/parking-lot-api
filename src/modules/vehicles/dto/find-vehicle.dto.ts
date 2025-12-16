@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsInt, IsString } from 'class-validator';
-import { PaginationDto } from '@/utils/pagination/dto/pagination.dto';
+import { PaginationQueryDto } from '@/contracts/dto/pagination-query.dto';
 
-export class FindVehiclesDto extends PaginationDto {
+export class FindVehiclesDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   licensePlate?: string;

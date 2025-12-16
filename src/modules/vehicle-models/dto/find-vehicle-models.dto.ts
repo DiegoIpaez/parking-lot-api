@@ -1,8 +1,8 @@
 import { IsInt, IsOptional } from 'class-validator';
-import { PaginationDto } from '@/utils/pagination/dto/pagination.dto';
+import { PaginationQueryDto } from '@/contracts/dto/pagination-query.dto';
 import { Type } from 'class-transformer';
 
-export class FindVehicleModelsDto extends PaginationDto {
+export class FindVehicleModelsDto extends PaginationQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
