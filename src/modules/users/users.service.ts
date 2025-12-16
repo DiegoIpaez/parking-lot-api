@@ -40,7 +40,9 @@ export class UsersService {
 
   async findAll(query: FindUsersDto) {
     const { page, limit, showAll, search } = query;
-    const whereClause: Prisma.UserWhereInput = {};
+    const whereClause: Prisma.UserWhereInput = {
+      deleted: false,
+    };
 
     if (query.role) whereClause.role = query.role;
     if (search) {
@@ -75,8 +77,8 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
+    const user = await this.prisma.user.findFirst({
+      where: { id, deleted: false },
       omit: { password: true },
     });
 
@@ -113,7 +115,7 @@ export class UsersService {
 
     return this.prisma.user.update({
       where: { id },
-      data: { isActive: false },
+      data: { deleted: true },
       omit: { password: true },
     });
   }

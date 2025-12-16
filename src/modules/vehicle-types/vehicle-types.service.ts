@@ -18,7 +18,10 @@ export class VehicleTypesService {
 
   async findAll(query: FindVehicleTypesDto) {
     const { page, limit, showAll, search } = query;
-    const whereClause: Prisma.VehicleTypeWhereInput = {};
+    const whereClause: Prisma.VehicleTypeWhereInput = {
+      deleted: false,
+    };
+
     if (search)
       whereClause.name = {
         contains: search,
@@ -51,8 +54,8 @@ export class VehicleTypesService {
   }
 
   async findOne(id: number) {
-    const vehicleType = await this.prisma.vehicleType.findUnique({
-      where: { id },
+    const vehicleType = await this.prisma.vehicleType.findFirst({
+      where: { id, deleted: false },
       include: {
         vehicleModels: true,
       },
@@ -67,7 +70,6 @@ export class VehicleTypesService {
 
   async update(id: number, updateVehicleTypeDto: UpdateVehicleTypeDto) {
     await this.findOne(id);
-
     return this.prisma.vehicleType.update({
       where: { id },
       data: updateVehicleTypeDto,
@@ -76,9 +78,9 @@ export class VehicleTypesService {
 
   async remove(id: number) {
     await this.findOne(id);
-
-    return this.prisma.vehicleType.delete({
+    return this.prisma.vehicleType.update({
       where: { id },
+      data: { deleted: true },
     });
   }
 }

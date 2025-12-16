@@ -406,7 +406,9 @@ dist
 /prisma/migrations/migration_lock.toml
 
 # IDEs
+docs/
 .idea/
 .vscode/
-
-docs/
+.cursor/
+# Claude
+CLAUDE.md

@@ -22,7 +22,9 @@ export class ParkingSpacesService {
   async findAll(query: FindParkingSpacesDto) {
     const { limit, page, showAll, search } = query;
 
-    const whereClause: Prisma.ParkingSpaceWhereInput = {};
+    const whereClause: Prisma.ParkingSpaceWhereInput = {
+      deleted: false,
+    };
 
     if (query.sectorId) {
       whereClause.sectorId = query.sectorId;
@@ -64,8 +66,8 @@ export class ParkingSpacesService {
   }
 
   async findOne(id: number) {
-    const parkingSpace = await this.prisma.parkingSpace.findUnique({
-      where: { id },
+    const parkingSpace = await this.prisma.parkingSpace.findFirst({
+      where: { id, deleted: false },
       include: {
         sector: true,
       },
@@ -93,8 +95,9 @@ export class ParkingSpacesService {
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.parkingSpace.delete({
+    return this.prisma.parkingSpace.update({
       where: { id },
+      data: { deleted: true },
     });
   }
 }

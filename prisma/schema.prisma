@@ -29,6 +29,8 @@ model Sector {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
+  disabled    Boolean  @default(false)
+  deleted     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -42,6 +44,7 @@ model ParkingSpace {
   number    Int
   sectorId  Int
   status    ParkingSpaceStatus @default(AVAILABLE)
+  deleted   Boolean            @default(false)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
 
@@ -57,6 +60,7 @@ model VehicleType {
   name          String
   ratePerMinute Decimal  @db.Decimal(10, 2)
   description   String?
+  deleted       Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -118,6 +122,7 @@ model User {
   password  String
   role      UserRole @default(OPERATOR)
   isActive  Boolean  @default(true)
+  deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -138,6 +143,7 @@ model ParkingSession {
   durationMinutes Int?
   totalAmount     Decimal?             @db.Decimal(10, 2)
   status          ParkingSessionStatus @default(ACTIVE)
+  deleted         Boolean              @default(false)
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
 
