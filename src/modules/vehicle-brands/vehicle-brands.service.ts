@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, VehicleBrand } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { FindVehicleBrandsDto } from './dto/find-vehicle-brands.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
+
 import { PrismaService } from '@/providers/prisma/prisma.service';
 
 @Injectable()
@@ -34,12 +34,6 @@ export class VehicleBrandsService {
       where: whereClause,
     });
 
-    return paginationFormatter<VehicleBrand>({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 }

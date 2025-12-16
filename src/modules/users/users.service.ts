@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   Injectable,
   NotFoundException,
@@ -9,7 +9,6 @@ import { PrismaService } from '@/providers/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class UsersService {
@@ -67,13 +66,7 @@ export class UsersService {
     const data = await this.prisma.user.findMany(queryClause);
     const totalRecords = await this.prisma.user.count({ where: whereClause });
 
-    return paginationFormatter<Omit<User, 'password'>>({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 
   async findOne(id: number) {

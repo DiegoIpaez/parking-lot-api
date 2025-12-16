@@ -4,7 +4,6 @@ import { PrismaService } from '@/providers/prisma/prisma.service';
 import { FindSectorsDto } from './dto/find-sectors.dto';
 import { UpdateSectorDto } from './dto/update-sector.dto';
 import { CreateSectorDto } from './dto/create-sector.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class SectorsService {
@@ -71,13 +70,7 @@ export class SectorsService {
     const data = await this.prisma.sector.findMany(queryClause);
     const totalRecords = await this.prisma.sector.count({ where: whereClause });
 
-    return paginationFormatter({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 
   async findOne(id: number) {

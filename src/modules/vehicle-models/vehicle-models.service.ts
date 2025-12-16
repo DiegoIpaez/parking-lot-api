@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/providers/prisma/prisma.service';
 import { FindVehicleModelsDto } from './dto/find-vehicle-models.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
+
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -31,6 +31,6 @@ export class VehicleModelsService {
     }
     const data = await this.prisma.vehicleModel.findMany(queryClause);
     const totalRecords = await this.prisma.vehicleModel.count({ where });
-    return paginationFormatter({ page, limit, data, totalRecords, showAll });
+    return { data, totalRecords };
   }
 }

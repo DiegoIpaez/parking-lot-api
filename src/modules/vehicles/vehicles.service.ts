@@ -4,7 +4,6 @@ import { PrismaService } from '@/providers/prisma/prisma.service';
 import { FindVehiclesDto } from './dto/find-vehicle.dto';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class VehiclesService {
@@ -80,13 +79,7 @@ export class VehiclesService {
       where: whereClause,
     });
 
-    return paginationFormatter({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 
   async findOne(id: number) {
