@@ -8,6 +8,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { paginationFormatter } from './pagination.formatter';
+import { PAGINATION_QUERY_DEFAULTS } from '@/constants';
 
 interface GetResponse<T = any> {
   data: T[];
@@ -20,8 +21,8 @@ export class PaginationInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest<Request>();
     if (req.method !== 'GET') return next.handle();
 
-    const page = Number(req.query.page ?? 1);
-    const limit = Number(req.query.limit ?? 10);
+    const page = Number(req.query.page ?? PAGINATION_QUERY_DEFAULTS.PAGE);
+    const limit = Number(req.query.limit ?? PAGINATION_QUERY_DEFAULTS.LIMIT);
     const showAll = req.query.showAll === 'true';
 
     return next.handle().pipe(
