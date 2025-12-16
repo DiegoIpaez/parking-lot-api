@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
 import { FindParkingSpacesDto } from './dto/find-parking-spaces.dto';

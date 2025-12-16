@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { paginationFormatter } from '@/utils/pagination/pagination.util';
 import { CreateVehicleTypeDto } from './dto/create-vehicle-type.dto';
 import { UpdateVehicleTypeDto } from './dto/update-vehicle-type.dto';

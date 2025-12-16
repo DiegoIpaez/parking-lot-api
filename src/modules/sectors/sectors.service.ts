@@ -1,6 +1,6 @@
 import { ParkingSessionStatus, Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { FindSectorsDto } from './dto/find-sectors.dto';
 import { UpdateSectorDto } from './dto/update-sector.dto';
 import { CreateSectorDto } from './dto/create-sector.dto';

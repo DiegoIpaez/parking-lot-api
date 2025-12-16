@@ -8,7 +8,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
 import { Decimal } from '@prisma/client/runtime/library';

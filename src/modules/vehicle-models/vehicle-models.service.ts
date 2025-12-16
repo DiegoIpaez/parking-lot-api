@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { FindVehicleModelsDto } from './dto/find-vehicle-models.dto';
 import { paginationFormatter } from '@/utils/pagination/pagination.util';
 import { Prisma } from '@prisma/client';
