@@ -18,7 +18,9 @@ export class SectorsService {
 
   async findAll(query: FindSectorsDto) {
     const { page, limit, showAll, search } = query;
-    const whereClause: Prisma.SectorWhereInput = {};
+    const whereClause: Prisma.SectorWhereInput = {
+      deleted: false,
+    };
 
     if (search) {
       whereClause.name = {
@@ -79,8 +81,8 @@ export class SectorsService {
   }
 
   async findOne(id: number) {
-    const sector = await this.prisma.sector.findUnique({
-      where: { id },
+    const sector = await this.prisma.sector.findFirst({
+      where: { id, deleted: false },
       include: {
         parkingSpaces: true,
       },
@@ -89,13 +91,11 @@ export class SectorsService {
     if (!sector) {
       throw new NotFoundException(`Sector with ID ${id} not found`);
     }
-
     return sector;
   }
 
   async update(id: number, updateSectorDto: UpdateSectorDto) {
     await this.findOne(id);
-
     return this.prisma.sector.update({
       where: { id },
       data: updateSectorDto,
@@ -104,9 +104,9 @@ export class SectorsService {
 
   async remove(id: number) {
     await this.findOne(id);
-
-    return this.prisma.sector.delete({
+    return this.prisma.sector.update({
       where: { id },
+      data: { deleted: true },
     });
   }
 }

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateSectorDto {
   @IsString()
@@ -8,4 +8,8 @@ export class CreateSectorDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  disabled: boolean;
 }

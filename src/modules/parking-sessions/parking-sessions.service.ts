@@ -96,7 +96,9 @@ export class ParkingSessionsService {
 
   async findAll(query: FindParkingSessionsDto) {
     const { page, limit, showAll, search } = query;
-    const whereClause: Prisma.ParkingSessionWhereInput = {};
+    const whereClause: Prisma.ParkingSessionWhereInput = {
+      deleted: true,
+    };
 
     if (query.checkInTime) {
       whereClause.checkInTime = { gte: query.checkInTime };
@@ -187,8 +189,8 @@ export class ParkingSessionsService {
   }
 
   async findOne(id: number) {
-    const session = await this.prisma.parkingSession.findUnique({
-      where: { id },
+    const session = await this.prisma.parkingSession.findFirst({
+      where: { id, deleted: false },
       include: {
         vehicle: {
           include: {
@@ -303,9 +305,9 @@ export class ParkingSessionsService {
 
   async remove(id: number) {
     await this.findOne(id);
-
-    return this.prisma.parkingSession.delete({
+    return this.prisma.parkingSession.update({
       where: { id },
+      data: { deleted: true },
     });
   }
 }
