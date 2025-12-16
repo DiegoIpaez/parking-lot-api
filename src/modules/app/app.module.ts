@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { PrismaModule } from '@/services/prisma/prisma.module';
+import { PrismaModule } from '@/providers/prisma/prisma.module';
 
 import { AuthModule } from '@/modules/auth/auth.module';
 import { UsersModule } from '@/modules/users/users.module';
@@ -13,6 +13,7 @@ import { VehicleBrandsModule } from '@/modules/vehicle-brands/vehicle-brands.mod
 import { VehicleModelsModule } from '@/modules/vehicle-models/vehicle-models.module';
 import { ParkingSpacesModule } from '@/modules/parking-spaces/parking-spaces.module';
 import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessions.module';
+import { PaginationModule } from '@/interceptors/pagination/pagination.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ParkingSessionsModule } from '@/modules/parking-sessions/parking-sessio
     SectorsModule,
     ParkingSpacesModule,
     ParkingSessionsModule,
+    PaginationModule,
   ],
   controllers: [],
   providers: [

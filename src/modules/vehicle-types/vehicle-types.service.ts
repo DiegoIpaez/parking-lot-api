@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { CreateVehicleTypeDto } from './dto/create-vehicle-type.dto';
 import { UpdateVehicleTypeDto } from './dto/update-vehicle-type.dto';
 import { FindVehicleTypesDto } from './dto/find-vehicle-types.dto';
@@ -44,13 +43,7 @@ export class VehicleTypesService {
       where: whereClause,
     });
 
-    return paginationFormatter({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 
   async findOne(id: number) {

@@ -3,3 +3,7 @@ export interface IJwtPayload {
   email: string;
   role: string;
 }
+
+export interface Dictionary<TItem> {
+  [key: string]: TItem;
+}

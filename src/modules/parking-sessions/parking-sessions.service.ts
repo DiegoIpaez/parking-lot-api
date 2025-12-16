@@ -8,12 +8,11 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { CreateParkingSessionDto } from './dto/create-parking-session.dto';
 import { CheckoutParkingSessionDto } from './dto/checkout-parking-session.dto';
 import { Decimal } from '@prisma/client/runtime/library';
 import { FindParkingSessionsDto } from './dto/find-parking-sessions.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class ParkingSessionsService {
@@ -179,13 +178,7 @@ export class ParkingSessionsService {
     const totalRecords = await this.prisma.parkingSession.count({
       where: whereClause,
     });
-    return paginationFormatter({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 
   async findOne(id: number) {

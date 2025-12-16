@@ -1,3 +1,11 @@
+type PaginationParams<T> = {
+  data: T[];
+  page: number;
+  limit: number;
+  totalRecords: number;
+  showAll?: boolean;
+};
+
 export type PaginationResponse<T> = {
   data: T[];
   currentPage: number;
@@ -7,15 +15,7 @@ export type PaginationResponse<T> = {
   hasNextPage: boolean;
 };
 
-type PaginationParams<T> = {
-  data: T[];
-  page: number;
-  limit: number;
-  totalRecords: number;
-  showAll?: boolean;
-};
-
-type AllDataResponse<T> = {
+export type AllDataResponse<T> = {
   data: T[];
   totalRecords: number;
 };

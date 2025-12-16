@@ -1,3 +1,3 @@
-import { PaginationDto } from '@/utils/pagination/dto/pagination.dto';
+import { PaginationQueryDto } from '@/contracts/dto/pagination-query.dto';
 
-export class FindVehicleBrandsDto extends PaginationDto {}
+export class FindVehicleBrandsDto extends PaginationQueryDto {}

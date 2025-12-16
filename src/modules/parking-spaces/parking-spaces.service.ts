@@ -1,10 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '@/services/prisma/prisma.service';
+import { PrismaService } from '@/providers/prisma/prisma.service';
 import { CreateParkingSpaceDto } from './dto/create-parking-space.dto';
 import { UpdateParkingSpaceDto } from './dto/update-parking-space.dto';
 import { FindParkingSpacesDto } from './dto/find-parking-spaces.dto';
-import { paginationFormatter } from '@/utils/pagination/pagination.util';
 
 @Injectable()
 export class ParkingSpacesService {
@@ -55,14 +54,7 @@ export class ParkingSpacesService {
     const totalRecords = await this.prisma.parkingSpace.count({
       where: whereClause,
     });
-
-    return paginationFormatter({
-      page,
-      limit,
-      data,
-      totalRecords,
-      showAll,
-    });
+    return { data, totalRecords };
   }
 
   async findOne(id: number) {
